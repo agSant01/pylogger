@@ -1,0 +1,7 @@
+# files
+**/tests
+
+**/__pycache__
+**/.idea
+
+setup.py
