@@ -1,4 +1,4 @@
-from pylogger.transporters.console import Console
-from pylogger.transporters.file import FileTransporter
+from .console import Console
+from .file import FileTransporter
 
 __all__ = ['Console', 'FileTransporter']

@@ -1,5 +1,5 @@
-from pylogger.messages.log import Log
-from pylogger.messages.json_log import JsonLog
+from .log import Log
+from .json_log import JsonLog
 
 
 __all__ = ['Log', 'JsonLog']
