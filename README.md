@@ -1,6 +1,6 @@
 # PyLogger
 
-A dynamic logger for Python3+. Supports logs in text or JSON format. 
+A dynamic logger for Python3.5+. Supports logs in text or JSON format. 
 
 ## Usage
 To create a simple logger write:

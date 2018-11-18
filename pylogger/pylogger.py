@@ -1,60 +1,77 @@
 from pylogger.transporters import Console
 from pylogger.messages import Log, JsonLog
 from pylogger.levels import Levels
+from pylogger.transporters.transporter import Transporter
+from pylogger.formats.format import Format
+from pylogger.formats.loggername import LoggerName
+from typing import List
 
 
 class PyLogger:
-    def __init__(self, input_formats=None, transporters=Console(), json=False, level=Levels.INFO):
+    def __init__(self, input_formats: Format or List[Format]=None,
+                 transporters: List[Transporter]=Console(),
+                 json: bool=False, level: Levels=Levels.INFO, name: str=None):
         if json is False:
-            self.msg = Log()
+            self._msg = Log()
         else:
-            self.msg = JsonLog()
-        self.fmts = input_formats
-        self.trans = transporters
-        self.level = level
+            self._msg = JsonLog()
+        self._fmts = PyLogger.__to_list(input_formats)
+        self._trans = PyLogger.__to_list(transporters)
+        self._level = level
+        self._name = name
 
-    def log(self, message, level=None):
+    def log(self, message: str, level: Levels=None) -> None:
         if level is None:
             raise ValueError("No level assigned")
 
         if self.__is_level_valid__(level) is False:
             return
 
-        self.msg.add_info(self.fmts)
-        if isinstance(self.trans, list):
-            for t in self.trans:
-                t.transport(self.msg.get_log(message))
-        else:
-            self.trans.transport(self.msg.get_log(message))
+        if self._name is not None:
+            self._fmts.append(LoggerName(self._name))
 
-    def add(self, transport):
-        if not isinstance(transport, transport.Transporter):
+        self._msg.add_info(self._fmts)
+        for t in self._trans:
+            if t.is_level_valid(level):
+                t.transport(self._msg.get_log(message))
+
+    def add_transporter(self, transport: Transporter) -> None:
+        if not isinstance(transport, Transporter):
             raise TypeError('Not instance of Transport.class')
 
-        if isinstance(self.trans, list):
-            self.trans.append(transport)
+        if isinstance(self._trans, list):
+            self._trans.append(transport)
         else:
-            temp = self.trans
-            self.trans = []
-            self.trans.append(temp)
-            self.trans.append(transport)
+            temp = self._trans
+            self._trans = []
+            self._trans.append(temp)
+            self._trans.append(transport)
 
-    def error(self, message):
+    def error(self, message: str) -> None:
         self.log(message, Levels.ERROR)
 
-    def warn(self, message):
+    def warn(self, message: str) -> None:
         self.log(message, Levels.WARN)
 
-    def info(self, message):
+    def info(self, message: str) -> None:
         self.log(message, Levels.INFO)
 
-    def verbose(self, message):
+    def verbose(self, message: str) -> None:
         self.log(message, Levels.VERBOSE)
 
-    def debug(self, message):
+    def debug(self, message: str) -> None:
         self.log(message, Levels.DEBUG)
 
-    def __is_level_valid__(self, level):
-        if level < self.level:
+    def __is_level_valid__(self, level: Levels) -> bool:
+        if level < self._level:
             return False
         return True
+
+    @staticmethod
+    def __to_list(o: object or List[object]) -> list:
+        ltr = list()
+        if isinstance(o, list):
+            ltr.extend(o)
+        else:
+            ltr.append(o)
+        return ltr

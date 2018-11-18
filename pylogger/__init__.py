@@ -1,5 +1,5 @@
-from pylogger import transporters, formats
-from pylogger.pylogger import PyLogger
-from pylogger.levels import Levels
+from . import transporters, formats
+from .pylogger import PyLogger
+from .levels import Levels
 
 __all__ = ['transporters', 'formats', 'PyLogger', 'Levels']

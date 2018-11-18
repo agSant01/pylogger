@@ -6,29 +6,29 @@ STEPS_TO_CALLER = 5
 
 class FunctionCaller(Format):
     @staticmethod
-    def get_name():
+    def get_name() -> str:
         return 'Function caller'
 
     @staticmethod
-    def get_format():
-        return inspect.stack()[STEPS_TO_CALLER][0].f_code.co_name
+    def get_format() -> str:
+        return str(inspect.stack()[STEPS_TO_CALLER][0].f_code.co_name)
 
 
 class FileCaller(Format):
     @staticmethod
-    def get_name():
+    def get_name() -> str:
         return 'File caller'
 
     @staticmethod
-    def get_format():
+    def get_format() -> str:
         return str(inspect.stack()[STEPS_TO_CALLER][1]).split('/').pop()
 
 
 class ClassCaller(Format):
     @staticmethod
-    def get_name():
+    def get_name() -> str:
         return 'Class caller'
 
     @staticmethod
-    def get_format():
+    def get_format() -> str:
         return str(inspect.stack()[STEPS_TO_CALLER][0].f_locals.get('self').__class__)

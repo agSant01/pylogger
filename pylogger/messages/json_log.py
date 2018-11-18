@@ -7,15 +7,12 @@ class JsonLog(Log):
         super().__init__()
         self._key_dict = dict()
 
-    def get_log(self, message):
+    def get_log(self, message: str) -> dict:
         self._key_dict.update({'log': message})
         return self._key_dict
 
-    def __add_format__(self, fmt):
-        if not isinstance(fmt, type(Format)):
-            raise TypeError('Argument is not of type Format')
+    def __add_format__(self, fmt: Format) -> None:
         key = fmt.get_name()
         info = fmt.get_format()
 
         self._key_dict.update({key: info})
-
