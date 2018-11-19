@@ -1,6 +1,6 @@
 # PyLogger
 
-A dynamic logger for Python3.5+. Supports logs in text or JSON format. 
+A dynamic logger for Python3.5+. Supports logging in text or JSON format. 
 
 ## Usage
 To create a simple logger write:
@@ -20,7 +20,7 @@ logger = PyLogger(
                 formats.MethodCaller
             ],
             transporters=[
-                transporters.FileTransporter('info.log'),
+                transporters.FileTransporter('info.log', Levels.ERROR),
                 transporters.Console()
             ],
             json=True,
@@ -33,12 +33,33 @@ This will log any event with higher priority than `Levels.INFO`, generate a json
 
 These are the default argument
 ```python 
-    logger = PyLogger(input_formats=None, transporters=Console(), json=False, levels=Levels.INFO)
+    logger = PyLogger(self, input_formats: Format or List[Format]=None,
+                 transporters: List[Transporter]=Console(),
+                 json: bool=False, level: Levels=Levels.INFO, name: str=None)
 ```
 
 ### Transporters
-
 ---
+A transporter is the vehicle responsible for delivering the log to the console or 
+designated file. It can be assigned a level in which it is allowed to log. 
+Also if needs to be the same or higher log level as the level requested by the API. 
+
+Generic arguments for a Transporter
+-   level: Levels **default: None**
+-   name: str **default: None**
+
+
+Examples:
+```python
+# will log to Console only the log requests of priority WARN(4)
+c_tranporter = Console(level=Levels.WARN, same_level=True)
+
+# will log to a file by a log request of priority higher than DEBUG(3)
+file_tranporter = FileTransporter('file.log', Levels.DEBUG, same_level=False)
+```
+
+You can create a `Transporter` of your own by extending the `Transporter` class.
+
 #### Console
 Outputs the log to the console
 #### File
@@ -48,6 +69,7 @@ Outputs log to a designated file
 ### Formats
 
 ---
+You can create a `Format` of your own by extending the `Format` class.
 #### Timestamp
 Adds a timestamp to the log
 #### Callers
