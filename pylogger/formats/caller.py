@@ -31,7 +31,7 @@ class ClassCaller(Format):
 
     @staticmethod
     def get_format() -> str:
-        return str(inspect.stack()[STEPS_TO_CALLER][0].f_locals.get('self').__class__)
+        return str(type(inspect.stack()[STEPS_TO_CALLER][0].f_locals.get('self')).__name__)
 
 
 class FileLine(Format):
