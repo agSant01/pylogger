@@ -1,15 +1,28 @@
-from ..levels import Levels
+from pylogger import levels
 
 
 class Transporter:
-    def __init__(self, level: Levels=None, same_level: bool=True):
+    def __init__(self, level: levels.Levels=None, same_level: bool=True, trans_id: str=None):
+        self.trans_id = trans_id
         self.level = level
         self.same_level = same_level
 
     def transport(self, message: object):
         raise NotImplementedError()
 
-    def is_level_valid(self, level: Levels) -> bool:
+    def get_id(self):
+        return self.trans_id
+
+    def set_id(self, trans_id):
+        if self.trans_id is None:
+            self.trans_id = trans_id
+        else:
+            raise ValueError('ID for transporter is already set. Cannot modify')
+
+    def get_type(self) -> str:
+        return str(type(self).__name__)
+
+    def is_level_valid(self, level: levels.Levels) -> bool:
         if self.level is None:
             return True
 
