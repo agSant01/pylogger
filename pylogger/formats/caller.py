@@ -1,7 +1,7 @@
 from pylogger.formats.format import Format
 import inspect
 
-STEPS_TO_CALLER = 5
+STEPS_TO_CALLER = 6
 
 
 class FunctionCaller(Format):
@@ -32,3 +32,13 @@ class ClassCaller(Format):
     @staticmethod
     def get_format() -> str:
         return str(inspect.stack()[STEPS_TO_CALLER][0].f_locals.get('self').__class__)
+
+
+class FileLine(Format):
+    @staticmethod
+    def get_name() -> str:
+        return 'Line Number'
+
+    @staticmethod
+    def get_format() -> str:
+        return str(inspect.stack()[STEPS_TO_CALLER][2])
