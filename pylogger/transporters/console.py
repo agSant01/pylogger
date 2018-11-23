@@ -7,4 +7,4 @@ class Console(Transporter):
         super().__init__(level, same_level, trans_id)
 
     def transport(self, message: object) -> None:
-        print(str(message))
+        print(str(message).replace("'", '"') + ',')

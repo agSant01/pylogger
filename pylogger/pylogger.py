@@ -4,15 +4,16 @@ from pylogger.levels import Levels
 from pylogger.transporters.transporter import Transporter
 from pylogger.formats.format import Format
 from pylogger.formats.loggername import LoggerName
+from pylogger.formats.type import LogType
 from typing import List, Dict
 import string
 import random
 
 
 class PyLogger:
-    def __init__(self, input_formats: Format or List[Format] = None,
-                 transporters: List[Transporter] = Console(),
-                 json: bool = False, level: Levels = Levels.INFO, name: str = None):
+    def __init__(self, input_formats: List[Format] or Format=None,
+                 transporters: List[Transporter] or Format=Console(),
+                 json: bool=False, level: Levels=Levels.INFO, name: str=None):
         if json is False:
             self._msg = Log()
         else:
@@ -20,11 +21,22 @@ class PyLogger:
         self._fmts: List[Format] = PyLogger.__to_list__(input_formats)
         self._transporters: Dict[str, Transporter] = PyLogger.__set_transporters__(PyLogger.__to_list__(transporters))
         self._level = level
+
         self._name = name
+        if self._name is not None:
+            self._fmts.append(LoggerName(self._name))
 
     def log(self, message: str, level: Levels = None, trans_id: str=None) -> None:
         if level is None:
             raise ValueError("No level assigned")
+
+        if self.__is_level_valid__(level) is False:
+            return
+
+        format_list = self._fmts.copy()
+        format_list.append(LogType(level))
+
+        self._msg.add_info(format_list)
 
         if trans_id is None:
             self.__log_to_all__(message, level)
@@ -40,13 +52,6 @@ class PyLogger:
             transport.transport(self._msg.get_log(message))
 
     def __log_to_all__(self, message, level):
-        if self.__is_level_valid__(level) is False:
-            return
-
-        if self._name is not None:
-            self._fmts.append(LoggerName(self._name))
-
-        self._msg.add_info(self._fmts)
         for trans_id, trans in self._transporters.items():
             if trans.is_level_valid(level):
                 trans.transport(self._msg.get_log(message))

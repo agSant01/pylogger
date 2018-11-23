@@ -9,5 +9,5 @@ class FileTransporter(Transporter):
 
     def transport(self, message: object) -> None:
         f = open(self.filename, '+a')
-        f.write(str(message) + '\n')
+        f.write(str(message).replace("'", '"') + ',\n')
         f.close()
