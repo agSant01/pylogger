@@ -1,4 +1,4 @@
-from pylogger.transporters.transporter import Transporter
+from .transporter import Transporter
 from ..levels import Levels
 
 
@@ -7,4 +7,4 @@ class Console(Transporter):
         super().__init__(level, same_level, trans_id)
 
     def transport(self, message: object) -> None:
-        print(str(message).replace("'", '"') + ',')
+        print(str(message) + ',')

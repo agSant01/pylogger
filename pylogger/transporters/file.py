@@ -1,4 +1,4 @@
-from pylogger.transporters.transporter import Transporter
+from .transporter import Transporter
 from ..levels import Levels
 
 
@@ -9,5 +9,5 @@ class FileTransporter(Transporter):
 
     def transport(self, message: object) -> None:
         f = open(self.filename, '+a')
-        f.write(str(message).replace("'", '"') + ',\n')
+        f.write(str(message) + ',\n')
         f.close()

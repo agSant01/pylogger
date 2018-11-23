@@ -1,10 +1,13 @@
+from .transporters import Transporter
 from pylogger.transporters import Console
+
 from pylogger.messages import Log, JsonLog
 from pylogger.levels import Levels
-from pylogger.transporters.transporter import Transporter
+
 from pylogger.formats.format import Format
 from pylogger.formats.loggername import LoggerName
 from pylogger.formats.type import LogType
+
 from typing import List, Dict
 import string
 import random
@@ -19,7 +22,7 @@ class PyLogger:
         else:
             self._msg = JsonLog()
         self._fmts: List[Format] = PyLogger.__to_list__(input_formats)
-        self._transporters: Dict[str, Transporter] = PyLogger.__set_transporters__(PyLogger.__to_list__(transporters))
+        self._transporters: Dict[str, Transporter] = self.__set_transporters__(PyLogger.__to_list__(transporters))
         self._level = level
 
         self._name = name
@@ -80,8 +83,7 @@ class PyLogger:
     def debug(self, message: str, trans_id: str=None) -> None:
         self.log(message, Levels.DEBUG, trans_id)
 
-    @staticmethod
-    def __set_transporters__(transporters: List[Transporter]) -> Dict[str, Transporter]:
+    def __set_transporters__(self, transporters: List[Transporter]) -> Dict[str, Transporter]:
         dict_of_transporters: Dict[str, Transporter] = dict()
 
         for transporter in transporters:
@@ -89,6 +91,7 @@ class PyLogger:
             if trans_id in dict_of_transporters:
                 raise ValueError('ID: `{}` for transporter is already in use'.format(trans_id))
             transporter.set_id(PyLogger.id_generator())
+            transporter.set_owner(self)
             dict_of_transporters.update({transporter.get_id(): transporter})
         return dict_of_transporters
 
