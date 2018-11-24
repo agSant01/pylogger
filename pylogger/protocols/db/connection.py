@@ -1,5 +1,5 @@
 from typing_extensions import Protocol
-from . import cursor
+from pylogger.protocols.db import cursor
 
 
 class Connection(Protocol):
