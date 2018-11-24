@@ -8,7 +8,7 @@ class FileTransporter(Transporter):
         super().__init__(level, same_level, trans_id)
         self.filename = filename
 
-    def transport(self, message: object) -> None:
+    def transport(self, log: Log) -> None:
         f = open(self.filename, '+a')
-        f.write(str(message) + ',\n')
+        f.write(log.get_log() + ',\n')
         f.close()

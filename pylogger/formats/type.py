@@ -3,8 +3,11 @@ from pylogger.levels import Levels
 
 
 class LogType(Format):
-    def __init__(self, log_type: Levels):
-        self.log_type = log_type
+    def __init__(self):
+        self.log_type = None
+
+    def set_type(self, level: Levels):
+        self.log_type = level
 
     @staticmethod
     def get_name() -> str:

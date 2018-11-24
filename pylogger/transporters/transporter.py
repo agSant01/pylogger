@@ -9,7 +9,7 @@ class Transporter:
         self.level: Levels = level
         self.same_level: bool = same_level
 
-    def transport(self, message: object):
+    def transport(self, log: Log):
         raise NotImplementedError()
 
     def get_id(self):

@@ -5,22 +5,34 @@ from typing import List
 
 class Log:
     def __init__(self):
-        self._additional_info: List[str] = []
+        self._additional_info: List[Format] = []
+        self.message: str = None
+        self._level: Levels = None
+
+    def has_format(self, fmt: Format) -> bool:
+        return fmt.get_name() in [f.get_name() for f in self._additional_info]
+
+    def set_message(self, message, level: Levels):
+        self.message = message
+        self._level = level
+
+    @property
+    def level(self):
+        return self._level.name.lower()
 
     def add_info(self, info_format: List[Format]):
         if info_format is None:
             return
 
-        self._additional_info.clear()
-        for fmt in info_format:
-            self.__add_format__(fmt)
+        self._additional_info = info_format
 
-    def get_log(self, message: str) -> str:
-        msg = 'Log: "{}"'.format(message)
-        for info in self._additional_info:
-            msg += ', ' + info
+    def get_log(self) -> str:
+        msg = 'Log: "{}"'.format(self.message)
+
+        for fmt in self._additional_info:
+            name = fmt.get_name()
+            data = fmt.get_format()
+            info_to_add: str = '{}: {}'.format(name, data)
+
+            msg += ', ' + info_to_add
         return msg
-
-    def __add_format__(self, fmt: Format) -> None:
-        info_to_add: str = '{}: {}'.format(fmt.get_name(), fmt.get_format())
-        self._additional_info.append(info_to_add)

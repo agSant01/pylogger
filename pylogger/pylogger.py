@@ -9,23 +9,24 @@ from pylogger.formats.loggername import LoggerName
 from pylogger.formats.type import LogType
 
 from typing import List, Dict
-import string
-import random
+from . import utils
 
 
 class PyLogger:
     def __init__(self, input_formats: List[Format] or Format=None,
                  transporters: List[Transporter] or Format=Console(),
-                 json: bool=False, level: Levels=Levels.INFO, name: str=None):
+                 json: bool=False, level: Levels=Levels.VERBOSE, name: str=None):
         if json is False:
             self._msg = Log()
         else:
             self._msg = JsonLog()
-        self._fmts: List[Format] = PyLogger.__to_list__(input_formats)
-        self._transporters: Dict[str, Transporter] = self.__set_transporters__(PyLogger.__to_list__(transporters))
+        self._fmts: List[Format] = utils.to_list(input_formats)
+        self._transporters: Dict[str, Transporter] = self.__set_transporters__(utils.to_list(transporters))
         self._level = level
 
         self._name = name
+        self.log_type = LogType()
+        self._fmts.append(self.log_type)
         if self._name is not None:
             self._fmts.append(LoggerName(self._name))
 
@@ -36,28 +37,27 @@ class PyLogger:
         if self.__is_level_valid__(level) is False:
             return
 
-        format_list = self._fmts.copy()
-        format_list.append(LogType(level))
-
-        self._msg.add_info(format_list)
+        self.log_type.set_type(level)
+        self._msg.add_info(self._fmts)
+        self._msg.set_message(message, level)
 
         if trans_id is None:
-            self.__log_to_all__(message, level)
+            self.__log_to_all__(level)
         else:
-            self.__log_to_id__(message, level, trans_id)
+            self.__log_to_id__(level, trans_id)
 
-    def __log_to_id__(self, message, level, trans__id):
+    def __log_to_id__(self, level, trans__id):
         transport: Transporter = self._transporters.get(trans__id)
         if transport is None:
             raise ValueError('Transport with ID: {} does not exists'.format(trans__id))
 
         if transport.is_level_valid(level):
-            transport.transport(self._msg.get_log(message))
+            transport.transport(self._msg)
 
-    def __log_to_all__(self, message, level):
+    def __log_to_all__(self, level):
         for trans_id, trans in self._transporters.items():
             if trans.is_level_valid(level):
-                trans.transport(self._msg.get_log(message))
+                trans.transport(self._msg)
 
     def add_transporter(self, transport: Transporter) -> None:
         if not isinstance(transport, Transporter):
@@ -65,7 +65,7 @@ class PyLogger:
         trans_id: str = transport.get_id()
         if trans_id in self._transporters:
             raise ValueError('ID: `{}` for transporter is already in use'.format(trans_id))
-        transport.set_id(PyLogger.id_generator())
+        transport.set_id(utils.id_generator())
         self._transporters.update({transport.get_id(): transport})
 
     def error(self, message: str, trans_id: str=None) -> None:
@@ -90,7 +90,7 @@ class PyLogger:
             trans_id: str = transporter.get_id()
             if trans_id in dict_of_transporters:
                 raise ValueError('ID: `{}` for transporter is already in use'.format(trans_id))
-            transporter.set_id(PyLogger.id_generator())
+            transporter.set_id(utils.id_generator())
             transporter.set_owner(self)
             dict_of_transporters.update({transporter.get_id(): transporter})
         return dict_of_transporters
@@ -99,16 +99,3 @@ class PyLogger:
         if level < self._level:
             return False
         return True
-
-    @staticmethod
-    def id_generator():
-        return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-
-    @staticmethod
-    def __to_list__(o: object or List[object]) -> list:
-        ltr = list()
-        if isinstance(o, list):
-            ltr.extend(o)
-        else:
-            ltr.append(o)
-        return ltr
