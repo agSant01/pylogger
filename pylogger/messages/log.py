@@ -22,17 +22,11 @@ class Log:
 
     def add_info(self, info_format: List[Format]):
         if info_format is None:
-            return
+            self._additional_info = []
 
         self._additional_info = info_format
 
     def get_log(self) -> str:
-        msg = 'Log: "{}"'.format(self.message)
-
-        for fmt in self._additional_info:
-            name = fmt.get_name()
-            data = fmt.get_format()
-            info_to_add: str = '{}: {}'.format(name, data)
-
-            msg += ', ' + info_to_add
+        msg = 'Log: "{}", '.format(self.message)
+        msg += ', '.join(['{}: {}'.format(fmt.get_name(), fmt.get_format()) for fmt in self._additional_info])
         return msg
