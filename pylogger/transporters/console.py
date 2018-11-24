@@ -8,4 +8,4 @@ class Console(Transporter):
         super().__init__(level, same_level, trans_id)
 
     def transport(self, log: Log) -> None:
-        print(log.get_log() + ',')
+        print(log.get_log())
