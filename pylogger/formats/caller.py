@@ -1,7 +1,7 @@
 from pylogger.formats.format import Format
 import inspect
 
-STEPS_TO_CALLER = 5
+STEPS_TO_CALLER = 6
 
 
 class FunctionCaller(Format):

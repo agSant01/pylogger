@@ -1,4 +1,5 @@
 from ..levels import Levels
+from ..messages.log import Log
 
 
 class Transporter:

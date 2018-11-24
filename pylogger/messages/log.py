@@ -1,4 +1,5 @@
 from pylogger.formats.format import Format
+from pylogger.levels import Levels
 from typing import List
 
 

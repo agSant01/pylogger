@@ -1,5 +1,6 @@
 from .transporter import Transporter
 from ..levels import Levels
+from ..messages.log import Log
 
 
 class Console(Transporter):
