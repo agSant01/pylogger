@@ -1,6 +1,6 @@
 # PyLogger
 
-A dynamic logger for Python3.5+. Supports logging in text or JSON format. 
+A dynamic logger for Python3.6+. Supports logging in text or JSON format. 
 Can output logs to console, a file, and/or a Database. 
 
 The Database plugin supports any database engine that follows the 
@@ -27,7 +27,7 @@ logger = PyLogger(
                 formats.FunctionCaller
             ],
             transporters=[
-                transporters.FileTransporter('info.log', Levels.ERROR),
+                transporters.FileTransporter('error.log', Levels.ERROR),
                 transporters.Console()
             ],
             json=True,
@@ -35,8 +35,8 @@ logger = PyLogger(
         )
 ```
 
-This will log any event with higher priority than `Levels.INFO`, 
-generate a json formatted output to *console* and *file* `info.log`,
+This will log any event with higher priority than `Levels.INFO` to the Console and `Levels.ERROR` to `error.log`, 
+generate a json formatted output to *console* and *file* `error.log` (if ERROR or higher priority),
 and add the timestamp, function caller, class caller and file caller.
 ```json
 {"log": "Test", "timestamp": "Sat Nov 24 22:40:21 2018", "File caller": "console-test.py", "Class caller": "MyClass", "Function caller": "my_func", "Log type": "error"}
@@ -72,9 +72,9 @@ logger = PyLogger(
         # 1
         transporters.FileTransporter(filename='everything.log'),
         # 2
-        transporters.FileTransporter(filename='log.log', level=Levels.WARN),
+        transporters.FileTransporter(filename='logs.log', level=Levels.WARN),
         # 3
-        transporters.FileTransporter(filename='info.log', level=Levels.ERROR, same_level=True),
+        transporters.FileTransporter(filename='info.log', level=Levels.INFO, same_level=True),
          # 4
         transporters.Console(level=Levels.INFO)
     ],
@@ -82,10 +82,10 @@ logger = PyLogger(
     level=Levels.VERBOSE
     )
 ```
-1. Logs to 'everything.log' when log priority is higher than `VERBOSE(1)`. `logger.verbose('Message')`
-2. Logs to 'log.log' only when the log priority is higher than `WARN(4)`
-3. Logs to 'info.log' only when the log priority is equal to `ERROR(5)`
-4. Logs to 'Console' when log priority is higher than `INFO(3)` 
+1. Logs to 'everything.log' when log priority is higher than or equal to `VERBOSE(1)`. `logger.verbose('Message')`
+2. Logs to 'logs.log' only when the log priority is higher than or equal to `WARN(4)`
+3. Logs to 'info.log' only when the log priority is equal to `INFO(3)`
+4. Logs to 'Console' when log priority is higher than or equal to `INFO(3)` 
 
 Transporters can be assigned an unique ID in which you can later use to 
 log only to that Transporter.
@@ -94,7 +94,7 @@ log only to that Transporter.
 logger = PyLogger(
     transporters=[
         transporters.FileTransporter(
-            filename='info.log', 
+            filename='error.log', 
             level=Levels.ERROR, 
             same_level=True,
             trans_id='file1'
@@ -112,7 +112,7 @@ logger = PyLogger(
 logger.info(message='My message', trans_id='console1')
 
 # log to file1 transporter
-logger.warn(message='My message', trans_id='file1')
+logger.error(message='My message', trans_id='file1')
 ```
 
 Examples:
@@ -120,7 +120,7 @@ Examples:
 # will log to Console only the log requests of priority WARN(4)
 c_tranporter = Console(level=Levels.WARN, same_level=True)
 
-# will log to a file by a log request of priority higher than DEBUG(3)
+# will log to a file by a log request of priority higher than or equal to DEBUG(3)
 file_tranporter = FileTransporter('file.log', Levels.DEBUG, same_level=False)
 ```
 
