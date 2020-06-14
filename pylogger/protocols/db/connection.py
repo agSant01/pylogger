@@ -1,5 +1,5 @@
 from typing_extensions import Protocol
-from pylogger.protocols.db import cursor
+from pylogger.protocols.db.cursor import Cursor
 
 
 class Connection(Protocol):
@@ -9,5 +9,5 @@ class Connection(Protocol):
     def commit(self) -> None:
         ...
 
-    def cursor(self) -> cursor:
+    def cursor(self) -> Cursor:
         ...

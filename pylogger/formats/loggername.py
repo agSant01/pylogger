@@ -6,6 +6,10 @@ class LoggerName(Format):
         self.name = name
 
     @staticmethod
+    def get_db_column_length() -> str:
+        return "50"
+
+    @staticmethod
     def get_name() -> str:
         return 'Logger Name'
 

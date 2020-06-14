@@ -10,6 +10,10 @@ class LogType(Format):
         self.log_type = level
 
     @staticmethod
+    def get_db_column_length() -> str:
+        return "50"
+
+    @staticmethod
     def get_name() -> str:
         return 'Log type'
 

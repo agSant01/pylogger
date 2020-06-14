@@ -1,9 +1,9 @@
 from pylogger.formats import Format
-from typing import Type
+# from typing import Type
 
 
 class ColumnMeta:
-    def __init__(self, column_name: str, column_data_type: Type[Format]):
+    def __init__(self, column_name: str, column_data_type: Format):
         self.name: str = column_name
         self.type: Format = column_data_type
 

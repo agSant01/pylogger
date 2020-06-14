@@ -9,6 +9,9 @@ class Log:
         self.message: str = None
         self._level: Levels = None
 
+    def formats(self) -> List[Format]:
+        return self._additional_info
+
     def has_format(self, fmt: Format) -> bool:
         return fmt.get_name() in [f.get_name() for f in self._additional_info]
 

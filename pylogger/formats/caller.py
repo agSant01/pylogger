@@ -6,6 +6,10 @@ STEPS_TO_CALLER = 6
 
 class FunctionCaller(Format):
     @staticmethod
+    def get_db_column_length() -> str:
+        return "30"
+
+    @staticmethod
     def get_name() -> str:
         return 'Function caller'
 
@@ -15,6 +19,10 @@ class FunctionCaller(Format):
 
 
 class FileCaller(Format):
+    @staticmethod
+    def get_db_column_length() -> str:
+        return "30"
+
     @staticmethod
     def get_name() -> str:
         return 'File caller'
@@ -26,6 +34,10 @@ class FileCaller(Format):
 
 class ClassCaller(Format):
     @staticmethod
+    def get_db_column_length() -> str:
+        return "30"
+
+    @staticmethod
     def get_name() -> str:
         return 'Class caller'
 
@@ -35,6 +47,10 @@ class ClassCaller(Format):
 
 
 class FileLine(Format):
+    @staticmethod
+    def get_db_column_length() -> str:
+        return "12"
+
     @staticmethod
     def get_name() -> str:
         return 'Line Number'

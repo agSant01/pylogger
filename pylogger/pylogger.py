@@ -26,7 +26,6 @@ class PyLogger:
 
         self._name = name
         self.log_type = LogType()
-        self._fmts.append(self.log_type)
         if self._name is not None:
             self._fmts.append(LoggerName(self._name))
 

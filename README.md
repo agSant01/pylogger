@@ -157,13 +157,22 @@ schema_object: DbSchema = DbSchema(
         'class': formats.ClassCaller,
         'line': formats.FileLine,
         'file': formats.FileCaller
-    } 
+    },
     # or list of ColumnMeta
     # columns=[
     #    ColumnMeta('time', formats.Timestamp),
     #    ColumnMeta('class', formats.ClassCaller),
     #    ...
-    # ] 
+    # ]
+    # or list of formats to set formats with their default names
+    # columns=[
+    #    formats.Timestamp,
+    #    formats.ClassCaller,
+    #    ...
+    # ]
+    table='Log',
+    log_column='log',
+    log_type_column='type'
 )
 ```
 

@@ -9,8 +9,16 @@ class Cursor(Protocol):
 
     @abstractmethod
     def execute(self, *args) -> object:
-        raise NotImplementedError()
+        ...
 
     @abstractmethod
     def executemany(self) -> None:
+        ...
+
+    @abstractmethod
+    def fetchone(self):
+        ...
+
+    @abstractmethod
+    def fetchmany(self):
         ...
